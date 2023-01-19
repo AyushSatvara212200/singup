@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import image from "./Images/hand-painted.jpg";
+import image from "./Images/mountaintwo.png";
 import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
 import { NavLink } from "react-router-dom";
 import axios from 'axios'
 import validator from 'validator'
@@ -10,6 +9,8 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import InputAdornment from "@mui/material/InputAdornment";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { AwesomeButton } from 'react-awesome-button'
+import 'react-awesome-button/dist/styles.css';
 
 const Container = styled.div`
   width: 100%;
@@ -24,8 +25,8 @@ const Container = styled.div`
 const Wrapper = styled.div`
   width: 30%;
  height: 60%;
-  background-color: whitesmoke;
-  box-shadow: 0px 0px 18px 4px rgba(0, 0, 0, 0.44);
+  background-color: #ffffffa9;
+  backdrop-filter: blur(20px);
   border-radius: 20px;
   display: flex;
   flex-direction: column;
@@ -36,7 +37,7 @@ const SignContainer = styled.div`
   width: 100%;
   height: 50px;
   font-size: 30px;
-  font-weight: bold;
+  font-weight: 600;
   border-radius: 20px;
   display: flex;
   align-items: center;
@@ -58,10 +59,11 @@ const ButtonContainer = styled.div`
   text-align: center;
   font-family: "Urbanist", sans-serif;
 `;
-const StyledButton = styled(Button)`
+const StyledButton = styled(AwesomeButton)`
   width: 30%;
   font-family: "Urbanist", sans-serif !important;
   font-weight: bold !important;
+  font-size: 15px;
 `;
 const SimpleText = styled.div`
   width: 100%;
@@ -85,12 +87,13 @@ export const Signup = () => {
     const { name, value } = e.target
     setUser({ ...user, [name]: value })
   }
-
   //On submit , data will be posted to database
   const submitSignUp = () => {
     const { username, email, password } = user;
     if (username && email && password && validator.isEmail(email) && validator.isStrongPassword(password)) {
-      axios.post("http://localhost:3002/signup", user).then(res => alert(res.data.message))
+      axios.post("http://localhost:3002/signup", user).then(res => {
+        alert(res.data.message);
+      })
       setUser({
         username: "",
         email: "",
@@ -129,13 +132,14 @@ export const Signup = () => {
     const { name, value } = e.target
     setUser({ ...user, [name]: value })
     const password = e.target.value
-    if (validator.isStrongPassword(password,)) {
+    if (validator.isStrongPassword(password)) {
       setPassError('Great !!')
       setPasEr(false)
-      setPassError('Create Password')
-    } else {
+    } else if (password) {
       setPassError('Enter Strong Password')
       setPasEr(true)
+    } else {
+      setPasEr(false)
     }
   }
   const [showPassword, setShowPassword] = useState(false);
@@ -182,7 +186,6 @@ export const Signup = () => {
             <StyledTextfield
               id="outlined-basic"
               type={showPassword ? 'text' : 'password'}
-              // type="password"
               label={passError}
               size="small"
               autoComplete="new-password"
@@ -199,7 +202,7 @@ export const Signup = () => {
             />
           </InputContainer>
           <ButtonContainer>
-            <StyledButton variant="contained" onClick={submitSignUp}>Submit</StyledButton>
+            <StyledButton type="primary" onPress={submitSignUp}>Register</StyledButton>
           </ButtonContainer>
           <SimpleText>
             Already have an account?&nbsp;
